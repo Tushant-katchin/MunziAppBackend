@@ -34,16 +34,40 @@ const config = require('./lib/config');
   require('./lib/routes')(app);
 
 setInterval(async () => {
+ 
    const marketdata = await appUtils.getCryptoData()
    let data
   if(marketdata){
       //console.log(marketdata)
-      data = await market.saveMarketData(marketdata)
-      
+      try{
+
+        data = await market.saveMarketData(marketdata)
+      }
+      catch(e){
+        console.log(e)
+      }
       
   }
-  console.log(data)
-  //await MarketUtilities.getCryptoData()
+  else{
+
+     data = await MarketUtilities.getCryptoData()
+ let result 
+// console.log(data)
+ if(data){
+  try{
+
+    result = await market.saveMarketData2(data)
+    //console.log(result)
+  }catch(e){
+    console.log(e)
+  }
+  
+ }else{
+  console.log('error fetching data')
+}
+
+  }
+  //console.log(data)
 }, 10000);
 
 const port=2000
